@@ -167,18 +167,7 @@ function crossfilter() {
         }
       }
 
-      // Fast incremental update based on previous hi index.
-      if (hi1 > hi0) {
-        for (i = Math.max(lo1, hi0), j = hi1; i < j; ++i) {
-          filters[k = index[i]] ^= one;
-          added.push(k);
-        }
-      } else if (hi1 < hi0) {
-        for (i = Math.max(lo0, hi1), j = hi0; i < j; ++i) {
-          filters[k = index[i]] ^= one;
-          removed.push(k);
-        }
-      }
+      LOLCHROME(lo0, lo1, hi0, hi1, one, filters, index, added, removed);
 
       lo0 = lo1;
       hi0 = hi1;
@@ -688,4 +677,20 @@ function crossfilter_capacity(w) {
       ? 0x100 : w === 16
       ? 0x10000
       : 0x100000000;
+}
+
+function LOLCHROME(lo0, lo1, hi0, hi1, one, filters, index, added, removed) {
+  var i, j, k;
+  // Fast incremental update based on previous hi index.
+  if (hi1 > hi0) {
+    for (i = Math.max(lo1, hi0), j = hi1; i < j; ++i) {
+      filters[k = index[i]] ^= one;
+      added.push(k);
+    }
+  } else if (hi1 < hi0) {
+    for (i = Math.max(lo0, hi1), j = hi0; i < j; ++i) {
+      filters[k = index[i]] ^= one;
+      removed.push(k);
+    }
+  }
 }
