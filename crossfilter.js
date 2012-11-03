@@ -550,7 +550,7 @@ function crossfilter() {
   }
 
   // Adds a new dimension with the specified value accessor function.
-  function dimension(value, initialIndex) {
+  function dimension(value, initial) {
     var dimension = {
       filter: filter,
       filterExact: filterExact,
@@ -591,15 +591,17 @@ function crossfilter() {
     function preAdd(newData, n0, n1) {
 
       // Permute new values into natural order using a sorted index.
-      newValues = newData.map(value);
-      if (initialIndex) {
-        newIndex = initialIndex;
-        initialIndex = null;
+
+      if (initial) {
+        newValues = initial.values;
+        newIndex = initial.index;
+        initial = null;
       }
       else {
+        newValues = newData.map(value);
         newIndex = sort(crossfilter_range(n1), 0, n1);
+        newValues = permute(newValues, newIndex);
       }
-      newValues = permute(newValues, newIndex);
 
       // Bisect newValues to determine which new records are selected.
       var bounds = refilter(newValues), lo1 = bounds[0], hi1 = bounds[1], i;
@@ -1055,6 +1057,7 @@ function crossfilter() {
     }
 
     dimension.index = function () { return index; };
+    dimension.sortedValues = function () { return values };
     return dimension;
   }
 
