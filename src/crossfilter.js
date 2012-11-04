@@ -35,7 +35,7 @@ function crossfilter() {
   }
 
   // Adds a new dimension with the specified value accessor function.
-  function dimension(value, initial) {
+  function dimension(value, initialValues) {
     var dimension = {
       filter: filter,
       filterExact: filterExact,
@@ -77,10 +77,10 @@ function crossfilter() {
 
       // Permute new values into natural order using a sorted index.
 
-      if (initial) {
-        newValues = initial.values;
-        newIndex = initial.index;
-        initial = null;
+      if (initialValues) {
+        newValues = initialValues.values;
+        newIndex = initialValues.index;
+        initialValues = null;
       }
       else {
         newValues = newData.map(value);
